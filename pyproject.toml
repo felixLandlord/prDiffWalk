@@ -1,0 +1,30 @@
+[project]
+name = "pr-diff-walk"
+version = "0.1.0"
+description = "PR dependency chain analysis with multi-language ecosystem support"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.12.0",
+    "rich>=13.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.4.0",
+]
+
+[project.scripts]
+pr-diff-walk = "pr_diff_walk.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pr_diff_walk"]

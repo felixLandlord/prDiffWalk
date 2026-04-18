@@ -1,0 +1,117 @@
+import re
+from pathlib import Path
+from typing import Iterable, List, Optional, Set
+
+from pr_diff_walk.base import LanguageIntegration
+from pr_diff_walk.schemas import EntityDef, ImportEdge, LanguageConfig, RepositoryFiles
+
+KOTLIN_EXTENSIONS = {".kt", ".kts"}
+
+
+def _kotlin_config() -> LanguageConfig:
+    return LanguageConfig(
+        name="kotlin",
+        extensions=KOTLIN_EXTENSIONS,
+        file_patterns=["*.kt", "*.kts"],
+        module_marker="build.gradle.kts",
+        package_indicator="package",
+        import_patterns={
+            "import": r"^\s*import\s+([\w.]+)",
+        },
+        entity_kinds={"class", "object", "interface", "enum", "sealed", "fun", "val", "var"},
+    )
+
+
+class KotlinIntegration(LanguageIntegration):
+    def __init__(self):
+        super().__init__(_kotlin_config())
+
+    def iter_code_files(self, root: Path, repo: RepositoryFiles) -> Iterable[Path]:
+        import os
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames[:] = [d for d in dirnames if d not in repo.excluded_dirs]
+            base_path = Path(dirpath)
+            for name in filenames:
+                p = base_path / name
+                if p.suffix.lower() in KOTLIN_EXTENSIONS:
+                    yield p
+
+    def resolve_import_to_file(
+        self, current_file: str, spec: str, repo_files: Set[str]
+    ) -> Optional[str]:
+        if not spec:
+            return None
+        
+        cur = Path(current_file)
+        parts = spec.split(".")
+        class_name = parts[-1]
+        package_path = "/".join(parts[:-1])
+        
+        candidates = [
+            f"{package_path}/{class_name}.kt",
+            f"{package_path}/{class_name}.kts",
+        ]
+        
+        for c in candidates:
+            if c in repo_files:
+                return c
+        return None
+
+    def parse_imports(
+        self, file_path: str, lines: List[str], repo_files: Set[str]
+    ) -> List[ImportEdge]:
+        edges: List[ImportEdge] = []
+        for i, line in enumerate(lines, start=1):
+            s = line.strip()
+            
+            if m := re.match(r"^\s*import\s+([\w.]+)", s):
+                full_spec = m.group(1)
+                parts = full_spec.split(".")
+                name = parts[-1]
+                src_file = self.resolve_import_to_file(file_path, full_spec, repo_files)
+                if src_file:
+                    edges.append(ImportEdge(file_path, src_file, name, name, i, "kt"))
+        
+        return edges
+
+    def parse_entities(self, file_path: str, lines: List[str]) -> List[EntityDef]:
+        out: List[EntityDef] = []
+        type_stack: List[str] = []
+        brace_depth = 0
+        
+        for i, line in enumerate(lines, start=1):
+            s = line.strip()
+            
+            if m := re.match(r"^\s*(?:abstract\s+)?(?:open\s+)?(?:class|data|annotation)\s+([A-Za-z_]\w*)", s):
+                type_stack.append(m.group(1))
+                out.append(EntityDef(name=m.group(1), kind="class", start=i, end=i))
+            
+            if m := re.match(r"^\s*object\s+([A-Za-z_]\w*)", s):
+                type_stack.append(m.group(1))
+                out.append(EntityDef(name=m.group(1), kind="object", start=i, end=i))
+            
+            if m := re.match(r"^\s*interface\s+([A-Za-z_]\w*)", s):
+                out.append(EntityDef(name=m.group(1), kind="interface", start=i, end=i))
+            
+            if m := re.match(r"^\s*enum\s+(?:class\s+)?([A-Za-z_]\w*)", s):
+                type_stack.append(m.group(1))
+                out.append(EntityDef(name=m.group(1), kind="enum", start=i, end=i))
+            
+            if m := re.match(r"^\s*sealed\s+(?:class\s+)?([A-Za-z_]\w*)", s):
+                type_stack.append(m.group(1))
+                out.append(EntityDef(name=m.group(1), kind="sealed", start=i, end=i))
+            
+            if m := re.match(r"^\s*(?:private\s+)?(?:fun|inline\s+fun)\s+([A-Za-z_]\w*)", s):
+                parent = type_stack[-1] if type_stack else None
+                out.append(EntityDef(name=m.group(1), kind="fun", start=i, end=i, parent=parent))
+            
+            if m := re.match(r"^\s*(?:val|var)\s+([A-Za-z_]\w*)", s):
+                parent = type_stack[-1] if type_stack else None
+                kind = "val" if s.startswith("val") else "var"
+                out.append(EntityDef(name=m.group(1), kind=kind, start=i, end=i, parent=parent))
+            
+            brace_depth += s.count("{") - s.count("}")
+            if s == "}" and type_stack:
+                type_stack.pop()
+        
+        return out
