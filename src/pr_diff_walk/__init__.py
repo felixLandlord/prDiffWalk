@@ -1,6 +1,5 @@
-from pr_diff_walk.base import LanguageIntegration
-from pr_diff_walk.git_clients import GitClient, GitHubClient, GitLabClient, get_git_client
-from pr_diff_walk.schemas import (
+from .base import LanguageIntegration
+from .schemas import (
     AnalysisResult,
     ChangedEntity,
     DependencyChain,
@@ -11,7 +10,16 @@ from pr_diff_walk.schemas import (
     LanguageConfig,
     RepositoryFiles,
 )
-from pr_diff_walk.service import DiffChainService, analyze_pr
+from .integrations import (
+    AVAILABLE_INTEGRATIONS,
+    LANGUAGE_TO_INTEGRATION,
+    EXTENSION_TO_INTEGRATION,
+    get_integration,
+    detect_integrations_from_files,
+    detect_integrations_from_extensions,
+)
+from .git_clients import GitClient, GitHubClient, GitLabClient, get_git_client
+from .service import DiffChainService, analyze_pr
 
 __version__ = "0.1.0"
 __all__ = [
@@ -31,4 +39,10 @@ __all__ = [
     "ImportEdge",
     "LanguageConfig",
     "RepositoryFiles",
+    "AVAILABLE_INTEGRATIONS",
+    "LANGUAGE_TO_INTEGRATION",
+    "EXTENSION_TO_INTEGRATION",
+    "get_integration",
+    "detect_integrations_from_files",
+    "detect_integrations_from_extensions",
 ]

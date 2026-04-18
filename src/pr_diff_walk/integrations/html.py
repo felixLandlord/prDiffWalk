@@ -2,8 +2,8 @@ import re
 from pathlib import Path
 from typing import Iterable, List, Optional, Set
 
-from pr_diff_walk.base import LanguageIntegration
-from pr_diff_walk.schemas import EntityDef, ImportEdge, LanguageConfig, RepositoryFiles
+from ..base import LanguageIntegration
+from ..schemas import EntityDef, ImportEdge, LanguageConfig, RepositoryFiles
 
 HTML_EXTENSIONS = {".html"}
 

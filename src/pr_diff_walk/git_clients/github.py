@@ -5,7 +5,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict, List
 
-from pr_diff_walk.git_clients.base import GitClient
+from .base import GitClient
 
 
 class GitHubClient(GitClient):

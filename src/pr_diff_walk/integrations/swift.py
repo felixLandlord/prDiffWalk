@@ -2,8 +2,8 @@ import re
 from pathlib import Path
 from typing import Iterable, List, Optional, Set
 
-from pr_diff_walk.base import LanguageIntegration
-from pr_diff_walk.schemas import EntityDef, ImportEdge, LanguageConfig, RepositoryFiles
+from ..base import LanguageIntegration
+from ..schemas import EntityDef, ImportEdge, LanguageConfig, RepositoryFiles
 
 SWIFT_EXTENSIONS = {".swift"}
 
@@ -47,7 +47,7 @@ class SwiftIntegration(LanguageIntegration):
         file_name = parts[-1]
         
         candidates = [
-            (cur.parent / spec.replace(".", "/") + ".swift").as_posix(),
+            (cur.parent / spec.replace(".", "/") / (file_name + ".swift")).as_posix(),
             (cur.parent / "/".join(parts[:-1]) / (file_name + ".swift")).as_posix(),
         ]
         

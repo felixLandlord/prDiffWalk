@@ -2,8 +2,8 @@ import re
 from pathlib import Path
 from typing import Iterable, List, Optional, Set
 
-from pr_diff_walk.base import LanguageIntegration
-from pr_diff_walk.schemas import EntityDef, ImportEdge, LanguageConfig, RepositoryFiles
+from ..base import LanguageIntegration
+from ..schemas import EntityDef, ImportEdge, LanguageConfig, RepositoryFiles
 
 PHP_EXTENSIONS = {".php"}
 
@@ -44,10 +44,11 @@ class PhpIntegration(LanguageIntegration):
             return None
         
         cur = Path(current_file)
+        spec_path = spec.replace("\\", "/")
         
         candidates = [
-            (cur.parent / spec.replace("\\", "/") + ".php").as_posix(),
-            (cur.parent / spec.replace("\\", "/")).as_posix() + ".php",
+            (cur.parent / spec_path).as_posix() + ".php",
+            (cur.parent / (spec_path + ".php")).as_posix(),
         ]
         
         for c in candidates:

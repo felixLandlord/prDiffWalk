@@ -2,8 +2,8 @@ import re
 from pathlib import Path
 from typing import Iterable, List, Optional, Set, Tuple
 
-from pr_diff_walk.base import LanguageIntegration
-from pr_diff_walk.schemas import EntityDef, EntityRef, ImportEdge, LanguageConfig, RepositoryFiles
+from ..base import LanguageIntegration
+from ..schemas import EntityDef, EntityRef, ImportEdge, LanguageConfig, RepositoryFiles
 
 PYTHON_EXTENSIONS = {".py"}
 
@@ -50,6 +50,7 @@ class PythonIntegration(LanguageIntegration):
             base_path.as_posix(),
             base_path.as_posix() + ".py",
             (base_path / "__init__.py").as_posix(),
+            (spec.split("/")[-1] if "/" in spec else spec) + ".py",
         ]
         
         for c in candidates:
@@ -127,9 +128,13 @@ class PythonIntegration(LanguageIntegration):
                 pending_class = None
             
             while indent_stack and indent <= indent_stack[-1]:
-                indent_stack.pop()
-                if class_stack and class_stack[-1][1] == indent_stack[-1] if indent_stack else True:
+                popped_indent = indent_stack.pop()
+                while class_stack and class_stack[-1][1] == popped_indent:
                     class_stack.pop()
+                    if indent_stack:
+                        popped_indent = indent_stack[-1]
+                    else:
+                        break
             
             if stripped.endswith(":"):
                 indent_stack.append(indent)

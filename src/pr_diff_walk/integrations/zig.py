@@ -2,8 +2,8 @@ import re
 from pathlib import Path
 from typing import Iterable, List, Optional, Set
 
-from pr_diff_walk.base import LanguageIntegration
-from pr_diff_walk.schemas import EntityDef, ImportEdge, LanguageConfig, RepositoryFiles
+from ..base import LanguageIntegration
+from ..schemas import EntityDef, ImportEdge, LanguageConfig, RepositoryFiles
 
 ZIG_EXTENSIONS = {".zig"}
 
@@ -43,11 +43,11 @@ class ZigIntegration(LanguageIntegration):
             return None
         
         cur = Path(current_file)
-        base = (cur.parent / spec.replace(".", "/")).as_posix()
+        base = cur.parent / spec.replace(".", "/")
         
         candidates = [
-            base + ".zig",
-            (base.parent / (base.name + ".zig")).as_posix(),
+            (base / (base.name + ".zig")).as_posix(),
+            (cur.parent / (base.name + ".zig")).as_posix(),
         ]
         
         for c in candidates:

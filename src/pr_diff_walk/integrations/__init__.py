@@ -1,7 +1,7 @@
-from typing import Dict, List, Optional, Set, Type
+from typing import Dict, List, Set, Type
 
-from pr_diff_walk.base import LanguageIntegration
-from pr_diff_walk.integrations.common import (
+from ..base import LanguageIntegration
+from .common import (
     CSS_EXCLUDED_DIRS,
     GENERAL_EXCLUDED_DIRS,
     GENERAL_EXCLUDED_FILES,
@@ -9,22 +9,22 @@ from pr_diff_walk.integrations.common import (
     JS_EXCLUDED_DIRS,
     TS_EXCLUDED_DIRS,
 )
-from pr_diff_walk.integrations.c_lang import CIntegration
-from pr_diff_walk.integrations.cpp import CppIntegration
-from pr_diff_walk.integrations.csharp import CSharpIntegration
-from pr_diff_walk.integrations.css import CssIntegration
-from pr_diff_walk.integrations.dart import DartIntegration
-from pr_diff_walk.integrations.golang import GoIntegration
-from pr_diff_walk.integrations.html import HtmlIntegration
-from pr_diff_walk.integrations.java import JavaIntegration
-from pr_diff_walk.integrations.javascript import JavascriptIntegration
-from pr_diff_walk.integrations.kotlin import KotlinIntegration
-from pr_diff_walk.integrations.php import PhpIntegration
-from pr_diff_walk.integrations.python import PythonIntegration
-from pr_diff_walk.integrations.rust import RustIntegration
-from pr_diff_walk.integrations.swift import SwiftIntegration
-from pr_diff_walk.integrations.typescript import TypescriptIntegration
-from pr_diff_walk.integrations.zig import ZigIntegration
+from .c_lang import CIntegration
+from .cpp import CppIntegration
+from .csharp import CSharpIntegration
+from .css import CssIntegration
+from .dart import DartIntegration
+from .golang import GoIntegration
+from .html import HtmlIntegration
+from .java import JavaIntegration
+from .javascript import JavascriptIntegration
+from .kotlin import KotlinIntegration
+from .php import PhpIntegration
+from .python import PythonIntegration
+from .rust import RustIntegration
+from .swift import SwiftIntegration
+from .typescript import TypescriptIntegration
+from .zig import ZigIntegration
 
 AVAILABLE_INTEGRATIONS: Dict[str, Type[LanguageIntegration]] = {
     "javascript": JavascriptIntegration,
@@ -63,7 +63,7 @@ LANGUAGE_TO_INTEGRATION: Dict[str, str] = {
     ".css": "css",
     ".py": "python",
     ".rs": "rust",
-    ".go": "golang",
+    ".go": "go",
     ".java": "java",
     ".cs": "csharp",
     ".dart": "dart",
@@ -89,7 +89,7 @@ EXTENSION_TO_INTEGRATION: Dict[str, str] = {
     ".css": "css",
     ".py": "python",
     ".rs": "rust",
-    ".go": "golang",
+    ".go": "go",
     ".java": "java",
     ".cs": "csharp",
     ".dart": "dart",

@@ -2,14 +2,14 @@ import tempfile
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from pr_diff_walk.base import LanguageIntegration
-from pr_diff_walk.git_clients import get_git_client
-from pr_diff_walk.git_clients.token_resolver import resolve_token
-from pr_diff_walk.integrations import (
+from .base import LanguageIntegration
+from .git_clients import get_git_client
+from .git_clients.token_resolver import resolve_token
+from .integrations import (
     detect_integrations_from_files,
     get_integration,
 )
-from pr_diff_walk.schemas import (
+from .schemas import (
     AnalysisResult,
     ChangedEntity,
     DependencyChain,

@@ -1,6 +1,6 @@
-from pr_diff_walk.git_clients.base import GitClient
-from pr_diff_walk.git_clients.github import GitHubClient
-from pr_diff_walk.git_clients.gitlab import GitLabClient
+from .base import GitClient
+from .github import GitHubClient
+from .gitlab import GitLabClient
 
 PROVIDERS = {
     "github": GitHubClient,

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Set, Tuple
 
-from pr_diff_walk.schemas import (
+from .schemas import (
     ChangedEntity,
     EntityDef,
     EntityRef,

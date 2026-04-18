@@ -9,7 +9,7 @@ from rich.panel import Panel
 from rich.syntax import Syntax
 from rich.table import Table
 
-from pr_diff_walk.service import DiffChainService
+from .service import DiffChainService
 
 app = typer.Typer(
     name="pr-diff-walk",
