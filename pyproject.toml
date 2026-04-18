@@ -6,11 +6,29 @@ build-backend = "hatchling.build"
 name = "pr-diff-walk"
 version = "0.1.0"
 description = "PR dependency chain analysis with multi-language ecosystem support"
+readme = "README.md"
 requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+keywords = ["pull-request", "dependency", "analysis", "github", "gitlab", "merge-request"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
 dependencies = [
     "typer>=0.12.0",
     "rich>=13.7.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/felixLandlord/prDiffWalk"
+Documentation = "https://github.com/felixLandlord/prDiffWalk#readme"
+Repository = "https://github.com/felixLandlord/prDiffWalk"
+Issues = "https://github.com/felixLandlord/prDiffWalk/issues"
 
 [project.optional-dependencies]
 dev = [
