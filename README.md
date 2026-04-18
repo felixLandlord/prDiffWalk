@@ -15,7 +15,7 @@
 
 ## Installation
 
-### From PyPI (Recommended)
+### From PyPI (planned release)
 
 ```bash
 pip install pr-diff-walk
