@@ -13,7 +13,7 @@ from pr_diff_walk.schemas import (
 )
 from pr_diff_walk.service import DiffChainService, analyze_pr
 
-__version__ = "0.2.0"
+__version__ = "0.1.0"
 __all__ = [
     "DiffChainService",
     "analyze_pr",
